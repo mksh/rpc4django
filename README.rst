@@ -1,5 +1,14 @@
+Django 1.5+ compat fork
+=======================
+Modified for django 1.5+
+
+See original project for details
+
 RPC4Django
 ==========
+
+
+
 
 .. image:: https://secure.travis-ci.org/davidfischer/rpc4django.png
     :target: https://travis-ci.org/davidfischer/rpc4django
@@ -9,7 +18,7 @@ Prerequisites
 -------------
 
 - Python_ 2.6, 2.7, 3.3
-- Django_ 1.3+
+- Django_ 1.5+
 - Docutils_ (optional)
 
 .. _Python: http://www.python.org
