@@ -66,7 +66,7 @@ def check_request_permission(request, request_format='xml'):
 
     user = getattr(request, 'user', None)
     methods = dispatcher.list_methods()
-    method_name = dispatcher.get_method_name(request.raw_post_data,
+    method_name = dispatcher.get_method_name(request.body,
                                              request_format)
     response = True
 
@@ -138,7 +138,7 @@ def is_xmlrpc_request(request):
     # this is slower than if the content-type was set properly
     # checking JSON is safer than XML because of entity expansion
     try:
-        json.loads(request.raw_post_data)
+        json.loads(request.body)
         return False
     except ValueError:
         return True
@@ -162,7 +162,7 @@ def serve_rpc_request(request):
         # Handle POST request with RPC payload
 
         if LOG_REQUESTS_RESPONSES:
-            logger.debug('Incoming request: %s' % str(request.raw_post_data))
+            logger.debug('Incoming request: %s' % str(request.body))
 
         if is_xmlrpc_request(request):
             if RESTRICT_XML:
@@ -171,7 +171,7 @@ def serve_rpc_request(request):
             if not check_request_permission(request, 'xml'):
                 return HttpResponseForbidden()
 
-            resp = dispatcher.xmldispatch(request.raw_post_data,
+            resp = dispatcher.xmldispatch(request.body,
                                           request=request)
             response_type = 'text/xml'
         else:
@@ -181,7 +181,7 @@ def serve_rpc_request(request):
             if not check_request_permission(request, 'json'):
                 return HttpResponseForbidden()
 
-            resp = dispatcher.jsondispatch(request.raw_post_data,
+            resp = dispatcher.jsondispatch(request.body,
                                            request=request)
             response_type = 'application/json'
 

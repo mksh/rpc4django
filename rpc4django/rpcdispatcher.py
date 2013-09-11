@@ -367,21 +367,21 @@ class RPCDispatcher(object):
                     # scan the module for methods with @rpcmethod
                     self.register_rpcmethods(["%s.%s" % (appname, obj)])
 
-    def jsondispatch(self, raw_post_data, **kwargs):
+    def jsondispatch(self, body, **kwargs):
         '''
         Sends the post data to :meth:`rpc4django.jsonrpcdispatcher.JSONRPCDispatcher.dispatch`
         '''
 
-        return self.jsonrpcdispatcher.dispatch(raw_post_data.decode('utf-8'), **kwargs)
+        return self.jsonrpcdispatcher.dispatch(body.decode('utf-8'), **kwargs)
 
-    def xmldispatch(self, raw_post_data, **kwargs):
+    def xmldispatch(self, body, **kwargs):
         '''
         Sends the post data to :meth:`rpc4django.xmlrpcdispatcher.XMLRPCDispatcher.dispatch`
         '''
 
-        return self.xmlrpcdispatcher.dispatch(raw_post_data, **kwargs)
+        return self.xmlrpcdispatcher.dispatch(body, **kwargs)
 
-    def get_method_name(self, raw_post_data, request_format='xml'):
+    def get_method_name(self, body, request_format='xml'):
         '''
         Gets the name of the method to be called given the post data
         and the format of the data
@@ -391,14 +391,14 @@ class RPCDispatcher(object):
             # xmlrpclib.loads could throw an exception, but this is fine
             # since _marshaled_dispatch would throw the same thing
             try:
-                params, method = loads(raw_post_data.decode('utf-8'))
+                params, method = loads(body.decode('utf-8'))
                 return method
             except Exception:
                 return None
         else:
             try:
                 # attempt to do a json decode on the data
-                jsondict = json.loads(raw_post_data.decode('utf-8'))
+                jsondict = json.loads(body.decode('utf-8'))
                 if not isinstance(jsondict, dict) or 'method' not in jsondict:
                     return None
                 else:
